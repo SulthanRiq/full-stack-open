@@ -12,7 +12,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [showAll, setShowAll] = useState(true)
   const [newNumber, setNewNumber] = useState('')
-  const [message, setMessage] = useState(true)
+  const [message, setMessage] = useState(null)
 
   useEffect(() => {
     personsService
@@ -42,12 +42,19 @@ const App = () => {
           setNewName('')
           setNewNumber('')
         }))
-        setMessage(
-          `Added ${newName}`
-        )
+        setMessage({
+          type: "success",
+          text: `${newName} was successfully added`
+        })
         setTimeout(() => {
           setMessage(null)
         }, 3000)
+        .catch(error => {
+          setMessage({
+            type: "error",
+            text: error.response?.data?.error || 'unknown error'
+          })
+        })
     } else {
       if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
         personsService
